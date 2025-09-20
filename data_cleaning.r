@@ -1,31 +1,34 @@
 data <- read.csv(file = "add.csv", header = TRUE, sep = ",")
 
-# Drop unrelated columns (including the numbering column)
-data <- data[, -c(1, 5:1558)]
+# Drop the numbering column
+# data <- data[, -1]
+
+# Drop unrelated columns
+data <- data[, -c(1, 6:1559)]
 
 # Rename columns
 colnames(data) <- c("Height", "Width", "Aspect_ratio", "Local", "Ad_prediction")
 
-print(summary(data))
-print("")
+summary(data)
 
-print(head(data))
-print(tail(data))
+head(data)
+
 
 # Replace ? with NA
 data <- as.data.frame(lapply(data, function(data) ifelse(grepl("\\?", data), NA, data)))
 
 
 # Convert Ad_prediction to binary value (0 = nonad, 1 = ad) (uses regex pattern matching)
-data$Ad_prediction <- ifelse(gsub("^ad\\.$", "", data$Ad_prediction) == "", 1, 0)
+data$Ad_prediction <- ifelse(data$Ad_prediction == "ad.", 1, 0)
+
+table(data$Ad_prediction)
 
 # Convert all values to numeric
 data <- as.data.frame(sapply(data, as.numeric))
 
 # Count number of NA
-print("Count the number of NA values in each column:")
 na_count <- sapply(data, function(x) sum(is.na(x)))
-print(na_count)
+na_count
 
 # Fill NA with median value (in Height, Width and Local)
 for (col in c("Height", "Width")) {
