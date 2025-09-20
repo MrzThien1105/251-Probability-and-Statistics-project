@@ -1,13 +1,11 @@
 data <- read.csv(file = "add.csv", header = TRUE, sep = ",")
 
-# Drop the numbering column
-# data <- data[, -1]
 
-# Drop unrelated columns
+# Drop unrelated columns (including number column)
 data <- data[, -c(1, 6:1559)]
 
 # Rename columns
-colnames(data) <- c("Height", "Width", "Aspect_ratio", "Local", "Ad_prediction")
+colnames(data) <- c("Height", "Width", "Aspect_ratio", "Local", "Is_Ad")
 
 summary(data)
 
@@ -15,13 +13,13 @@ head(data)
 
 
 # Replace ? with NA
-data <- as.data.frame(lapply(data, function(data) ifelse(grepl("\\?", data), NA, data)))
+data <- as.data.frame(lapply(data, function(x) ifelse(grepl("\\?", x), NA, x)))
 
 
-# Convert Ad_prediction to binary value (0 = nonad, 1 = ad) (uses regex pattern matching)
-data$Ad_prediction <- ifelse(data$Ad_prediction == "ad.", 1, 0)
+# Convert Is_Ad to binary value (0 = nonad, 1 = ad) (uses regex pattern matching)
+data$Is_Ad <- ifelse(data$Is_Ad == "ad.", 1, 0)
 
-table(data$Ad_prediction)
+table(data$Is_Ad)
 
 # Convert all values to numeric
 data <- as.data.frame(sapply(data, as.numeric))
@@ -32,8 +30,8 @@ na_count
 
 # Fill NA with median value (in Height, Width and Local)
 for (col in c("Height", "Width")) {
-        data[col] <- lapply(data[col], function(x) ifelse(is.na(x), median(x, na.rm = TRUE), x))
-    }
+    data[col] <- lapply(data[col], function(x) ifelse(is.na(x), median(x, na.rm = TRUE), x))
+}
 
 # For Local, use the rounded mean
 data["Local"] <- lapply(data["Local"], function(x) ifelse(is.na(x), round(mean(x, na.rm = TRUE)), x))
