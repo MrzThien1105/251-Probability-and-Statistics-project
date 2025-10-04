@@ -18,51 +18,47 @@ summary(data2)
 X11()        # Opens a plotting window on Linux
 par(mfrow = c(4, 1))    # Put graphs in 4 rows and 1 column # par stands for parameter, mfrow = multi figure row-wise
 # Plot histograms for Height, Width, Aspect_ratio, Local
-hist(data2$Height[data2$is_Ad == 1], main = "Distribution of Height (Ads)", xlab = "Height", col = "lightblue", border = "black")
-hist(data2$Height[data2$is_Ad == 0], main = "Distribution of Height (Non-Ads)", xlab = "Height", col = "violet", border = "black")
-hist(data2$Width[data2$is_Ad == 1], main = "Distribution of Width (Ads)", xlab = "Width", col = "lightblue", border = "black")
-hist(data2$Width[data2$is_Ad == 0], main = "Distribution of Width (Non-Ads)", xlab = "Width", col = "violet", border = "black")
+hist(data2$Height[data2$is_Ad == 1], main = "Distribution of Height (Ads)", xlab = "Height", col = "#FF3700", border = "black")
+hist(data2$Height[data2$is_Ad == 0], main = "Distribution of Height (Non-Ads)", xlab = "Height", col = "#0066CC", border = "black")
+hist(data2$Width[data2$is_Ad == 1], main = "Distribution of Width (Ads)", xlab = "Width", col = "#FF3700", border = "black")
+hist(data2$Width[data2$is_Ad == 0], main = "Distribution of Width (Non-Ads)", xlab = "Width", col = "#0066CC", border = "black")
 
 
 X11()        # Opens a plotting window on Linux
 par(mfrow = c(2, 1)) # Put graphs in 2 rows and 1 column
-hist(data2$Aspect_ratio[data2$is_Ad == 1], main = "Distribution of Aspect Ratio (Ads)", xlab = "Aspect Ratio", col = "yellow", border = "black")
-hist(data2$Aspect_ratio[data2$is_Ad == 0], main = "Distribution of Aspect Ratio (Non-Ads)", xlab = "Aspect Ratio", col = "violet", border = "black")
+hist(data2$Aspect_ratio[data2$is_Ad == 1], main = "Distribution of Aspect Ratio (Ads)", xlab = "Aspect Ratio", col = "#FF3700", border = "black")
+hist(data2$Aspect_ratio[data2$is_Ad == 0], main = "Distribution of Aspect Ratio (Non-Ads)", xlab = "Aspect Ratio", col = "#0066CC", border = "black")
 
 
 # Scatter plot of Height vs Width, color-coded by is_Ad, with appropriate labels and title
 X11()        # Opens a plotting window on Linux
-par(mfrow = c(1, 1)) # Put graphs in 1 row and 1 column
-plot(data2$Height[data2$is_Ad == 1], data2$Width[data2$is_Ad == 1], main = "Distribution relatively to height and width of ad", xlab = "Height", ylab = "Width", col = "blue", pch = 20, cex = 1.5)
-lines(density(data2$Height[data2$is_Ad == 1]), col = "darkblue", lwd = 2) # Add density line for Height of ads
-lines(density(data2$Width[data2$is_Ad == 1]), col = "darkgreen", lwd = 2) # Add density line for Width of ads
-legend("topright", legend = c("Ad", "Non-Ad"), col = c("blue", "red"), pch = 20)
-X11()        # Opens a plotting window on Linux
-par(mfrow = c(1, 1)) # Put graphs in 1 row and 1 column
-plot(data2$Height[data2$is_Ad == 0], data2$Width[data2$is_Ad == 0], main = "Distribution relatively to height and width of non-ad", xlab = "Height", ylab = "Width", col = "red", pch = 20, cex = 1.5)
-legend("topright", legend = c("Ad", "Non-Ad"), col = c("blue", "red"), pch = 20)
-
+par(mfcol = c(1, 2)) # Put graphs in 1 row and 2 columns, filled column-wise, square plotting area, no spaces between plots
+plot(data2$Height[data2$is_Ad == 1], data2$Width[data2$is_Ad == 1], main = "Distribution relatively to height and width of ad", xlab = "Height", ylab = "Width", col = "#FF3700", pch = 20, cex = 1.5)
+plot(data2$Height[data2$is_Ad == 0], data2$Width[data2$is_Ad == 0], main = "Distribution relatively to height and width of non-ad", xlab = "Height", ylab = "Width", col = "#0066CC", pch = 20, cex = 1.5)
+?legend
 #Pie chart for proportion of ads vs non-ads
 X11()
- sizegap =  prop_table <- prop.table(table(data2$is_Ad))
+prop_table <- prop.table(table(data2$is_Ad))
 print(prop_table)
-pie(sizegap) 
+sizegap <- prop_table
 names(sizegap) = c("Non-Ad", "Ad") # give names
-pie(sizegap) # prints out names
-pie(sizegap,col=c("red","cyan"))
-legend("topright", legend = c("Non-Ad", "Ad"), fill = c("red", "cyan"))
+pct <- round(sizegap*100)
+lbls <- paste(names(sizegap), "\n", pct, "%", sep = "") # Add numbers to the pie chart
+pie(sizegap, labels = lbls, col=c("#0066CC","#FF3700"), main="Proportion of Ads vs Non-Ads")   
+# Add legend
+legend("topright", legend = c("Non-Ad", "Ad"), fill = c("#0066CC", "#FF3700"))
+
 
 
 X11()
 par(mfcol = c(1, 1)) # Put graphs in 3 columns and 1 row
-boxplot(data2$Height ~ data2$is_Ad, main = "Boxplot of Height by Ad Type", xlab = "Ad Type", ylab = "Height")
+boxplot(data2$Height ~ data2$is_Ad, main = "Boxplot of Height by Ad Type", xlab = "Ad Type", ylab = "Height", names = c("Non-Ad", "Ad"), col = c("#0066CC", "#FF3700") )
 X11()
 par(mfcol = c(1, 1)) # Put graphs in 3 columns and 1 row
-boxplot(data2$Width ~ data2$is_Ad, main = "Boxplot of Width by Ad Type", xlab = "Ad Type", ylab = "Width")
+boxplot(data2$Width ~ data2$is_Ad, main = "Boxplot of Width by Ad Type", xlab = "Ad Type", ylab = "Width", names = c("Non-Ad", "Ad"), col = c("#0066CC", "#FF3700"))
 X11()
 par(mfcol = c(1, 1)) # Put graphs in 3 columns and 1 row
-boxplot(data2$Aspect_ratio ~ data2$is_Ad, main = "Boxplot of Aspect Ratio by Ad Type", xlab = "Ad Type", ylab = "Aspect Ratio")
-
+boxplot(data2$Aspect_ratio ~ data2$is_Ad, main = "Boxplot of Aspect Ratio by Ad Type", xlab = "Ad Type", ylab = "Aspect Ratio", names = c("Non-Ad", "Ad"), col = c("#0066CC", "#FF3700"))
 
 # Scatter plot using pairs for better visualization
 X11()        # Opens a plotting window on Linux
@@ -77,7 +73,7 @@ panel.cor <- function(x, y, digits = 4, prefix = "", cex.cor, ...)
     text(0.5, 0.5, txt, cex = 2, vfont = c("sans serif", "bold"))
 }
 par(mfrow = c(1, 1))
-pairs(data2[, c("Height", "Width", "Aspect_ratio")], upper.panel = panel.cor, col = ifelse(data2$is_Ad == 1, "blue", "red"), gap = 1/10, pch = 20, cex = 1.5, main = "Scatterplot Matrix of Height, Width, and Aspect Ratio" )
+pairs(data2[, c("Height", "Width", "Aspect_ratio")], upper.panel = panel.cor, col = ifelse(data2$is_Ad == 1, "#FF3700", "#0066CC"), gap = 1/10, pch = 20, cex = 1.5, main = "Scatterplot Matrix of Height, Width, and Aspect Ratio" )
 
 # Summary statistics
 summary_stats <- function(a) {
@@ -101,7 +97,7 @@ summary_stats(data2$Aspect_ratio)
 # ggplot(data2, aes(x = Height, y = Width, color = factor(is_Ad))) +
 #   geom_point(alpha = 0.6, size = 2) +
 #   labs(title = "Height vs Width", x = "Height", y = "Width", color = "Ad Type") +
-#   scale_color_manual(values = c("red", "blue"), labels = c("Non-Ad", "Ad")) +
+#   scale_color_manual(values = c("#0066CC", "#FF3700"), labels = c("Non-Ad", "Ad")) +
 #   theme_minimal()
 
 #TODO: Draw graphs in which median, variance, and standard deviation are clearly visible
